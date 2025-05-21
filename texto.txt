@@ -1,4 +1,0 @@
-esto es un comentario
-esta es la segunda línea
-esta es la tercera línea
-esta es la cuarta línea
