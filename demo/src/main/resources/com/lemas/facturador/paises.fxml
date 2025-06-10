@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.lemas.facturador.PaisesController">
+   <children>
+      <Label layoutX="180.0" layoutY="76.0" text="Seleccione el país" textFill="#005f9a">
+         <font>
+            <Font size="31.0" />
+         </font>
+      </Label>
+      <ComboBox fx:id="cmbPaises" layoutX="225.0" layoutY="146.0" prefWidth="150.0" />
+   </children>
+</Pane>

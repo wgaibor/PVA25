@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox xmlns="http://javafx.com/javafx/13" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.ejemplo.jpa.MainController"
+      spacing="10" alignment="CENTER" prefWidth="300" prefHeight="150" style="-fx-padding:20">
+
+    <Label text="Seleccione el país:"/>
+    <ComboBox fx:id="comboPaises" prefWidth="200"/>
+</VBox>
