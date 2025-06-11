@@ -16,4 +16,6 @@ module com.example.factura {
     opens com.example.factura.controller to javafx.fxml;
 
     exports com.example.factura.controller;
+
+    opens com.example.factura.entity to javafx.base;
 }
