@@ -4,6 +4,8 @@
         <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
         <class>com.teclemas.factura.model.InfoItemModel</class>
         <class>com.teclemas.factura.model.InfoFacturaModel</class>
+        <class>com.teclemas.factura.model.AdmiCaracteristicaModel</class>
+        <class>com.teclemas.factura.model.InfoFacturaDatoAdicionalModel</class>
         <properties>
             <property name="jakarta.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/facturador"/>
             <property name="jakarta.persistence.jdbc.user" value="lemas"/>

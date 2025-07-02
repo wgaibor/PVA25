@@ -30,6 +30,9 @@
       <Label fx:id="txtIva" layoutX="441.0" layoutY="415.0" />
       <Label layoutX="331.0" layoutY="445.0" text="Total" />
       <Label fx:id="txtFacturar" layoutX="441.0" layoutY="445.0" />
-      <Button fx:id="btnFacturar" layoutX="201.0" layoutY="403.0" mnemonicParsing="false" onAction="#facturar" text="Facturar" />
+      <Button fx:id="btnFacturar" layoutX="518.0" layoutY="402.0" mnemonicParsing="false" onAction="#facturar" text="Facturar" />
+      <TextField fx:id="txtNombreCliente" layoutX="49.0" layoutY="375.0" promptText="Nombre" />
+      <TextField fx:id="txtCorreoCliente" layoutX="49.0" layoutY="411.0" promptText="Correo" />
+      <TextField fx:id="txtTelefonoCliente" layoutX="49.0" layoutY="441.0" promptText="Telefono" />
    </children>
 </Pane>

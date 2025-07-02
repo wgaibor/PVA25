@@ -43,6 +43,17 @@ public class InfoFacturaDAO {
         }
     }
 
+    public InfoFacturaModel findByUuid(String uuid) {
+        EntityManager em = JPAUtil.getEntityManager();
+        try {
+            return em.createQuery("SELECT f FROM InfoFacturaModel f WHERE f.uuid = :uuid", InfoFacturaModel.class)
+                    .setParameter("uuid", uuid)
+                    .getSingleResult();
+        } finally {
+            em.close();
+        }
+    }
+
     public void update(InfoFacturaModel factura) {
         EntityManager em = JPAUtil.getEntityManager();
         EntityTransaction tx = em.getTransaction();

@@ -1,6 +1,18 @@
 package com.teclemas.factura.controller;
 
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.UUID;
+
+import com.teclemas.factura.dao.AdmiCaracteristicaDAO;
+import com.teclemas.factura.dao.InfoFacturaDAO;
+import com.teclemas.factura.dao.InfoFacturaDatoAdicionalDAO;
+import com.teclemas.factura.dao.InfoItemDAO;
 import com.teclemas.factura.entity.ProductoEntity;
+import com.teclemas.factura.model.AdmiCaracteristicaModel;
+import com.teclemas.factura.model.InfoFacturaDatoAdicionalModel;
+import com.teclemas.factura.model.InfoFacturaModel;
+import com.teclemas.factura.model.InfoItemModel;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -54,6 +66,15 @@ public class FacturaController {
     @FXML
     private Label txtSubtotal;
 
+    @FXML
+    private TextField txtNombreCliente;
+
+    @FXML
+    private TextField txtCorreoCliente;
+
+    @FXML
+    private TextField txtTelefonoCliente;
+
     // Lista observable para almacenar los registros
     private ObservableList<ProductoEntity> registroList = FXCollections.observableArrayList();
 
@@ -84,16 +105,128 @@ public class FacturaController {
         producto.setPrecio(calculo);
 
         registroList.add(producto);
+        calcularTotales();
+        limpiarCajasTexto();
     }
 
     @FXML
     void facturar(ActionEvent event) {
 
+        String codigoUnico = UUID.randomUUID().toString();
+
+        int idFactura;
+
+        for (ProductoEntity productoEntity : registroList) {
+            InfoItemModel infoItemModel = new InfoItemModel();
+            infoItemModel.setUuid(codigoUnico);
+            infoItemModel.setNombreProducto(productoEntity.getNombreProducto());
+            infoItemModel.setCantidad(productoEntity.getCantidad().intValue());
+            infoItemModel.setPrecio(
+                    BigDecimal.valueOf(Double.parseDouble(productoEntity.getPrecio().toString().replace(",", "."))));
+            infoItemModel.setFeCreacion(new Date().toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate());
+            infoItemModel.setUsrCreacion("wgaibor");
+            infoItemModel.setEstado("Activo");
+            InfoItemDAO infoItemDAO = new InfoItemDAO();
+            infoItemDAO.insert(infoItemModel);
+        }
+
+        InfoFacturaModel infoFacturaModel = new InfoFacturaModel();
+        infoFacturaModel.setUuid(codigoUnico);
+        infoFacturaModel.setSubtotal(BigDecimal.valueOf(Double.parseDouble(txtSubtotal.getText().replace(",", "."))));
+        infoFacturaModel.setIva(BigDecimal.valueOf(Double.parseDouble(txtIva.getText().replace(",", "."))));
+        infoFacturaModel.setTotal(BigDecimal.valueOf(Double.parseDouble(txtFacturar.getText().replace(",", "."))));
+        infoFacturaModel.setFeCreacion(new Date().toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate());
+        infoFacturaModel.setUsrCreacion("wgaibor");
+        infoFacturaModel.setEstado("Activo");
+        InfoFacturaDAO infoFacturaDAO = new InfoFacturaDAO();
+        infoFacturaDAO.insert(infoFacturaModel);
+
+        // Recuperar el id de la factura recien creada
+        infoFacturaModel = infoFacturaDAO.findByUuid(codigoUnico);
+        idFactura = infoFacturaModel.getIdFactura();
+
+        // Recuperar la caracteristica nombre
+        AdmiCaracteristicaModel admiCaracteristicaModel = new AdmiCaracteristicaModel();
+        AdmiCaracteristicaDAO admiCaracteristicaDAO = new AdmiCaracteristicaDAO();
+        admiCaracteristicaModel = admiCaracteristicaDAO.findBynombreCaracteristica("Nombre");
+        // Vamos almacenar los datos del cliente de manera horizontal
+
+        InfoFacturaDatoAdicionalModel infoFacturaDatoAdicionalModel = new InfoFacturaDatoAdicionalModel();
+        infoFacturaDatoAdicionalModel.setFacturaId(idFactura);
+        infoFacturaDatoAdicionalModel.setCaracteristicaId(admiCaracteristicaModel.getIdCaracteristica());
+        infoFacturaDatoAdicionalModel.setValor(txtNombreCliente.getText());
+        infoFacturaDatoAdicionalModel
+                .setFeCreacion(new Date().toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate());
+        infoFacturaDatoAdicionalModel.setUsrCreacion("wgaibor");
+        infoFacturaDatoAdicionalModel.setEstado("Activo");
+
+        InfoFacturaDatoAdicionalDAO infoFacturaDatoAdicionalDAO = new InfoFacturaDatoAdicionalDAO();
+        infoFacturaDatoAdicionalDAO.insert(infoFacturaDatoAdicionalModel);
+
+        // Guardar el correo del cliente
+        admiCaracteristicaModel = admiCaracteristicaDAO.findBynombreCaracteristica("Correo");
+
+        infoFacturaDatoAdicionalModel = new InfoFacturaDatoAdicionalModel();
+        infoFacturaDatoAdicionalModel.setFacturaId(idFactura);
+        infoFacturaDatoAdicionalModel.setCaracteristicaId(admiCaracteristicaModel.getIdCaracteristica());
+        infoFacturaDatoAdicionalModel.setValor(txtCorreoCliente.getText());
+        infoFacturaDatoAdicionalModel
+                .setFeCreacion(new Date().toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate());
+        infoFacturaDatoAdicionalModel.setUsrCreacion("wgaibor");
+        infoFacturaDatoAdicionalModel.setEstado("Activo");
+        infoFacturaDatoAdicionalDAO.insert(infoFacturaDatoAdicionalModel);
+
+        // Guardar el telefono del cliente
+        admiCaracteristicaModel = admiCaracteristicaDAO.findBynombreCaracteristica("Telefono");
+
+        infoFacturaDatoAdicionalModel = new InfoFacturaDatoAdicionalModel();
+        infoFacturaDatoAdicionalModel.setFacturaId(idFactura);
+        infoFacturaDatoAdicionalModel.setCaracteristicaId(admiCaracteristicaModel.getIdCaracteristica());
+        infoFacturaDatoAdicionalModel.setValor(txtTelefonoCliente.getText());
+        infoFacturaDatoAdicionalModel
+                .setFeCreacion(new Date().toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate());
+        infoFacturaDatoAdicionalModel.setUsrCreacion("wgaibor");
+        infoFacturaDatoAdicionalModel.setEstado("Activo");
+        infoFacturaDatoAdicionalDAO.insert(infoFacturaDatoAdicionalModel);
+
+        limpiarCajasTexto();
+        limpiarPantalla();
+
     }
 
     @FXML
     void limpiar(ActionEvent event) {
+        limpiarCajasTexto();
+        limpiarPantalla();
+    }
 
+    // Método para calcular los totales de la factura
+    private void calcularTotales() {
+        double subtotal = 0.0;
+        for (ProductoEntity producto : registroList) {
+            subtotal += producto.getPrecio();
+        }
+        double iva = subtotal * 0.15; // Suponiendo un IVA del 15%
+        double total = subtotal + iva;
+
+        txtSubtotal.setText(String.format("%.2f", subtotal));
+        txtIva.setText(String.format("%.2f", iva));
+        txtFacturar.setText(String.format("%.2f", total));
+    }
+
+    // Método para limpiar las cajas de texto de entrada
+    private void limpiarCajasTexto() {
+        txtNombreProducto.clear();
+        txtCantidad.clear();
+        txtPrecioUnitario.clear();
+    }
+
+    // Método para limpiar la pantalla (por ejemplo, limpiar la tabla y los totales)
+    private void limpiarPantalla() {
+        registroList.clear();
+        txtSubtotal.setText("");
+        txtIva.setText("");
+        txtFacturar.setText("");
     }
 
 }
