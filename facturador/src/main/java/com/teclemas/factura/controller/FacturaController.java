@@ -114,8 +114,6 @@ public class FacturaController {
 
         String codigoUnico = UUID.randomUUID().toString();
 
-        int idFactura;
-
         for (ProductoEntity productoEntity : registroList) {
             InfoItemModel infoItemModel = new InfoItemModel();
             infoItemModel.setUuid(codigoUnico);
@@ -143,7 +141,6 @@ public class FacturaController {
 
         // Recuperar el id de la factura recien creada
         infoFacturaModel = infoFacturaDAO.findByUuid(codigoUnico);
-        idFactura = infoFacturaModel.getIdFactura();
 
         // Recuperar la caracteristica nombre
         AdmiCaracteristicaModel admiCaracteristicaModel = new AdmiCaracteristicaModel();
@@ -152,8 +149,8 @@ public class FacturaController {
         // Vamos almacenar los datos del cliente de manera horizontal
 
         InfoFacturaDatoAdicionalModel infoFacturaDatoAdicionalModel = new InfoFacturaDatoAdicionalModel();
-        infoFacturaDatoAdicionalModel.setFacturaId(idFactura);
-        infoFacturaDatoAdicionalModel.setCaracteristicaId(admiCaracteristicaModel.getIdCaracteristica());
+        infoFacturaDatoAdicionalModel.setFactura(infoFacturaModel);
+        infoFacturaDatoAdicionalModel.setCaracteristica(admiCaracteristicaModel);
         infoFacturaDatoAdicionalModel.setValor(txtNombreCliente.getText());
         infoFacturaDatoAdicionalModel
                 .setFeCreacion(new Date().toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate());
@@ -167,8 +164,8 @@ public class FacturaController {
         admiCaracteristicaModel = admiCaracteristicaDAO.findBynombreCaracteristica("Correo");
 
         infoFacturaDatoAdicionalModel = new InfoFacturaDatoAdicionalModel();
-        infoFacturaDatoAdicionalModel.setFacturaId(idFactura);
-        infoFacturaDatoAdicionalModel.setCaracteristicaId(admiCaracteristicaModel.getIdCaracteristica());
+        infoFacturaDatoAdicionalModel.setFactura(infoFacturaModel);
+        infoFacturaDatoAdicionalModel.setCaracteristica(admiCaracteristicaModel);
         infoFacturaDatoAdicionalModel.setValor(txtCorreoCliente.getText());
         infoFacturaDatoAdicionalModel
                 .setFeCreacion(new Date().toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate());
@@ -180,8 +177,8 @@ public class FacturaController {
         admiCaracteristicaModel = admiCaracteristicaDAO.findBynombreCaracteristica("Telefono");
 
         infoFacturaDatoAdicionalModel = new InfoFacturaDatoAdicionalModel();
-        infoFacturaDatoAdicionalModel.setFacturaId(idFactura);
-        infoFacturaDatoAdicionalModel.setCaracteristicaId(admiCaracteristicaModel.getIdCaracteristica());
+        infoFacturaDatoAdicionalModel.setFactura(infoFacturaModel);
+        infoFacturaDatoAdicionalModel.setCaracteristica(admiCaracteristicaModel);
         infoFacturaDatoAdicionalModel.setValor(txtTelefonoCliente.getText());
         infoFacturaDatoAdicionalModel
                 .setFeCreacion(new Date().toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate());
@@ -227,6 +224,9 @@ public class FacturaController {
         txtSubtotal.setText("");
         txtIva.setText("");
         txtFacturar.setText("");
+        txtNombreCliente.clear();
+        txtCorreoCliente.clear();
+        txtTelefonoCliente.clear();
     }
 
 }

@@ -45,3 +45,13 @@ CREATE TABLE facturador.info_factura_dato_adicional (
 	feUltModificacion DATE NULL COMMENT 'Fecha de última modificación',
 	usrUltModificacion varchar(15) NULL COMMENT 'Usuario de última modificación'
 );
+
+ALTER TABLE facturador.info_factura_dato_adicional
+ADD CONSTRAINT fk_info_factura_dato_adicional_caracteristica
+FOREIGN KEY (caracteristicaId)
+REFERENCES facturador.admi_caracteristica(idCaracteristica);
+
+ALTER TABLE facturador.info_factura_dato_adicional
+ADD CONSTRAINT fk_info_factura_dato_adicional_factura
+FOREIGN KEY (facturaId)
+REFERENCES facturador.info_factura(idFactura);

@@ -12,11 +12,13 @@ public class InfoFacturaDatoAdicionalModel {
     @Column(name = "idDatoAdicional")
     private Integer idDatoAdicional;
 
-    @Column(name = "facturaId", nullable = false)
-    private Integer facturaId;
+    @ManyToOne
+    @JoinColumn(name = "facturaId", referencedColumnName = "idFactura", nullable = false)
+    private InfoFacturaModel factura;
 
-    @Column(name = "caracteristicaId", nullable = false)
-    private Integer caracteristicaId;
+    @ManyToOne
+    @JoinColumn(name = "caracteristicaId", referencedColumnName = "idCaracteristica", nullable = false)
+    private AdmiCaracteristicaModel caracteristica;
 
     @Column(name = "valor", length = 255)
     private String valor;
@@ -46,20 +48,20 @@ public class InfoFacturaDatoAdicionalModel {
         this.idDatoAdicional = idDatoAdicional;
     }
 
-    public Integer getFacturaId() {
-        return facturaId;
+    public InfoFacturaModel getFactura() {
+        return factura;
     }
 
-    public void setFacturaId(Integer facturaId) {
-        this.facturaId = facturaId;
+    public void setFactura(InfoFacturaModel factura) {
+        this.factura = factura;
     }
 
-    public Integer getCaracteristicaId() {
-        return caracteristicaId;
+    public AdmiCaracteristicaModel getCaracteristica() {
+        return caracteristica;
     }
 
-    public void setCaracteristicaId(Integer caracteristicaId) {
-        this.caracteristicaId = caracteristicaId;
+    public void setCaracteristica(AdmiCaracteristicaModel caracteristica) {
+        this.caracteristica = caracteristica;
     }
 
     public String getValor() {
