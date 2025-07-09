@@ -17,13 +17,19 @@ import com.teclemas.factura.model.InfoItemModel;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.layout.HBox;
+import javafx.util.Callback;
+import javafx.util.converter.LongStringConverter;
 
 public class FacturaController {
 
@@ -47,6 +53,9 @@ public class FacturaController {
 
     @FXML
     private TableColumn<ProductoEntity, Double> tclPrecio;
+
+    @FXML
+    private TableColumn<ProductoEntity, Void> tclAcciones;
 
     @FXML
     private TextField txtCantidad;
@@ -80,11 +89,63 @@ public class FacturaController {
 
     @FXML
     void initialize() {
+        tblProducto.setPlaceholder(new Label("No hay productos agregados"));
+        tblProducto.setEditable(true);
         // Vincula las columnas de la tabla con las propiedades del objeto
         // ProductoEntity
         tclNombreProducto.setCellValueFactory(new PropertyValueFactory<ProductoEntity, String>("nombreProducto"));
         tclCantidad.setCellValueFactory(new PropertyValueFactory<ProductoEntity, Long>("cantidad"));
+        tclCantidad.setStyle(
+                "-fx-alignment: CENTER; -fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill:rgb(6, 168, 117);");
+        tclCantidad.setCellFactory(TextFieldTableCell.forTableColumn(new LongStringConverter()));
+        tclCantidad.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<ProductoEntity, Long>>() {
+            @Override
+            public void handle(TableColumn.CellEditEvent<ProductoEntity, Long> event) {
+                ProductoEntity producto = event.getRowValue();
+                producto.setCantidad(event.getNewValue());
+            }
+        });
         tclPrecio.setCellValueFactory(new PropertyValueFactory<ProductoEntity, Double>("precio"));
+
+        // Configura la columna de acciones (puedes personalizarla según tus
+        // necesidades)
+        tclAcciones.setCellFactory(new Callback<TableColumn<ProductoEntity, Void>, TableCell<ProductoEntity, Void>>() {
+            @Override
+            public TableCell<ProductoEntity, Void> call(TableColumn<ProductoEntity, Void> col) {
+                return new TableCell<ProductoEntity, Void>() {
+                    private final Button btnUpdate = new Button("actualizar");
+                    private final Button btnDelete = new Button("eliminar");
+                    private final HBox pane = new HBox(5, btnUpdate, btnDelete);
+
+                    {
+                        btnUpdate.setOnAction(new javafx.event.EventHandler<javafx.event.ActionEvent>() {
+                            @Override
+                            public void handle(javafx.event.ActionEvent event) {
+                                ProductoEntity producto = getTableView().getItems().get(getIndex());
+                                // Lógica para actualizar el producto
+                                // actualizarProducto(producto);
+                            }
+                        });
+
+                        btnDelete.setOnAction(new javafx.event.EventHandler<javafx.event.ActionEvent>() {
+                            @Override
+                            public void handle(javafx.event.ActionEvent event) {
+                                ProductoEntity producto = getTableView().getItems().get(getIndex());
+                                getTableView().getItems().remove(producto);
+                                // recalcular totales
+                                calcularTotales();
+                            }
+                        });
+                    }
+
+                    @Override
+                    protected void updateItem(Void item, boolean empty) {
+                        super.updateItem(item, empty);
+                        setGraphic(empty ? null : pane);
+                    }
+                };
+            }
+        });
 
         // Asigna la lista observable al TableView
         tblProducto.setItems(registroList);

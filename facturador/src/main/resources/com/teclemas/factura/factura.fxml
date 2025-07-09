@@ -19,9 +19,10 @@
       <Button fx:id="btnLimpiar" layoutX="463.0" layoutY="59.0" mnemonicParsing="false" onAction="#limpiar" text="Limpiar" />
       <TableView fx:id="tblProducto" layoutX="44.0" layoutY="143.0" prefHeight="219.0" prefWidth="531.0">
         <columns>
-          <TableColumn fx:id="tclNombreProducto" prefWidth="310.0000190734863" text="nombreProducto" />
-          <TableColumn fx:id="tclCantidad" minWidth="0.0" prefWidth="118.6666259765625" text="cantidad" />
-            <TableColumn fx:id="tclPrecio" prefWidth="101.33340454101562" text="Precio" />
+          <TableColumn fx:id="tclNombreProducto" prefWidth="200.0000190734863" text="nombreProducto" />
+          <TableColumn fx:id="tclCantidad" minWidth="0.0" prefWidth="80.6666259765625" text="cantidad" />
+          <TableColumn fx:id="tclPrecio" prefWidth="90.33340454101562" text="Precio" />
+          <TableColumn fx:id="tclAcciones" prefWidth="150.0" text="acciones" />
         </columns>
       </TableView>
       <Label layoutX="331.0" layoutY="387.0" text="Subtotal" />
