@@ -19,7 +19,10 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
@@ -84,6 +87,9 @@ public class FacturaController {
     @FXML
     private TextField txtTelefonoCliente;
 
+    @FXML
+    private CheckBox chbDonante;
+
     // Lista observable para almacenar los registros
     private ObservableList<ProductoEntity> registroList = FXCollections.observableArrayList();
 
@@ -91,6 +97,9 @@ public class FacturaController {
     void initialize() {
         tblProducto.setPlaceholder(new Label("No hay productos agregados"));
         tblProducto.setEditable(true);
+
+        filtroDeExpresionesRegulares();
+
         // Vincula las columnas de la tabla con las propiedades del objeto
         // ProductoEntity
         tclNombreProducto.setCellValueFactory(new PropertyValueFactory<ProductoEntity, String>("nombreProducto"));
@@ -151,8 +160,35 @@ public class FacturaController {
         tblProducto.setItems(registroList);
     }
 
+    private void filtroDeExpresionesRegulares() {
+        // Para txtCantidad (solo enteros)
+        txtCantidad.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("\\d*")) {
+                txtCantidad.setText(newValue.replaceAll("[^\\d]", ""));
+            }
+        });
+
+        // Para txtPrecioUnitario (números decimales)
+        txtPrecioUnitario.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("\\d*(\\.\\d*)?")) {
+                txtPrecioUnitario.setText(oldValue);
+            }
+        });
+
+        // Para txtTelefonoCliente (solo enteros)
+        txtTelefonoCliente.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("\\d*")) {
+                txtTelefonoCliente.setText(newValue.replaceAll("[^\\d]", ""));
+            }
+        });
+    }
+
     @FXML
     void agregar(ActionEvent event) {
+        boolean esValidoFormulario = validarCampos();
+        if (!esValidoFormulario) {
+            return;
+        }
         String nombreProducto = txtNombreProducto.getText();
         Long cantidad = Long.parseLong(txtCantidad.getText());
         Double precio = Double.parseDouble(txtPrecioUnitario.getText());
@@ -168,6 +204,31 @@ public class FacturaController {
         registroList.add(producto);
         calcularTotales();
         limpiarCajasTexto();
+    }
+
+    private boolean validarCampos() {
+        if (txtNombreProducto.getText() == null || txtNombreProducto.getText().isEmpty()) {
+            alertarUsuario(Alert.AlertType.ERROR, "ERROR", null,
+                    "El campo Nombre del producto no puede ser vacio");
+            return false;
+        } else if (txtCantidad.getText() == null || txtCantidad.getText().isEmpty()) {
+            alertarUsuario(Alert.AlertType.ERROR, "ERROR", null,
+                    "El campo Cantidad no puede ser vacio");
+            return false;
+        } else if (txtPrecioUnitario.getText() == null || txtPrecioUnitario.getText().isEmpty()) {
+            alertarUsuario(Alert.AlertType.ERROR, "ERROR", null,
+                    "El campo Precio unitario no puede ser vacio");
+            return false;
+        }
+        return true;
+    }
+
+    private void alertarUsuario(AlertType alerta, String titulo, String headerText, String contentText) {
+        Alert alert = new Alert(alerta);
+        alert.setTitle(titulo);
+        alert.setHeaderText(headerText);
+        alert.setContentText(contentText);
+        alert.showAndWait();
     }
 
     @FXML
@@ -247,6 +308,36 @@ public class FacturaController {
         infoFacturaDatoAdicionalModel.setEstado("Activo");
         infoFacturaDatoAdicionalDAO.insert(infoFacturaDatoAdicionalModel);
 
+        // Guardar si es donante
+        admiCaracteristicaModel = admiCaracteristicaDAO.findBynombreCaracteristica("Donante");
+        if (admiCaracteristicaModel == null) {
+            // Alertar al usuario que no existe la caracteristica con un alert
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Advertencia");
+            alert.setHeaderText(null);
+            alert.setContentText("La característica 'Donante' no existe en la base de datos.");
+            alert.showAndWait();
+
+            admiCaracteristicaModel = new AdmiCaracteristicaModel();
+            admiCaracteristicaModel.setNombreCaracteristica("Donante");
+            admiCaracteristicaModel
+                    .setFeCreacion(new Date().toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate());
+            admiCaracteristicaModel.setUsrCreacion("wgaibor");
+            admiCaracteristicaModel.setEstado("Activo");
+            AdmiCaracteristicaDAO admiCaracteristicaDAONew = new AdmiCaracteristicaDAO();
+            admiCaracteristicaDAONew.insert(admiCaracteristicaModel);
+        }
+
+        infoFacturaDatoAdicionalModel = new InfoFacturaDatoAdicionalModel();
+        infoFacturaDatoAdicionalModel.setFactura(infoFacturaModel);
+        infoFacturaDatoAdicionalModel.setCaracteristica(admiCaracteristicaModel);
+        infoFacturaDatoAdicionalModel.setValor(chbDonante.isSelected() ? "Sí" : "No");
+        infoFacturaDatoAdicionalModel
+                .setFeCreacion(new Date().toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate());
+        infoFacturaDatoAdicionalModel.setUsrCreacion("wgaibor");
+        infoFacturaDatoAdicionalModel.setEstado("Activo");
+        infoFacturaDatoAdicionalDAO.insert(infoFacturaDatoAdicionalModel);
+
         limpiarCajasTexto();
         limpiarPantalla();
 
@@ -288,6 +379,7 @@ public class FacturaController {
         txtNombreCliente.clear();
         txtCorreoCliente.clear();
         txtTelefonoCliente.clear();
+        chbDonante.setSelected(false);
     }
 
 }

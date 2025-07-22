@@ -4,6 +4,7 @@ import com.teclemas.factura.model.AdmiCaracteristicaModel;
 import com.teclemas.factura.util.JPAUtil;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityTransaction;
 
 public class AdmiCaracteristicaDAO {
 
@@ -15,6 +16,25 @@ public class AdmiCaracteristicaDAO {
                             AdmiCaracteristicaModel.class)
                     .setParameter("nombre", nombre)
                     .getSingleResult();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            em.close();
+        }
+    }
+
+    public void insert(AdmiCaracteristicaModel admiCaracteristicaModel) {
+        EntityManager em = JPAUtil.getEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        try {
+            tx.begin();
+            em.persist(admiCaracteristicaModel);
+            tx.commit();
+        } catch (Exception e) {
+            if (tx.isActive())
+                tx.rollback();
+            throw e;
         } finally {
             em.close();
         }
