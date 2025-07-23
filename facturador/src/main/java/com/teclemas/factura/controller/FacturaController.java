@@ -3,6 +3,7 @@ package com.teclemas.factura.controller;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.UUID;
+import java.util.regex.Pattern;
 
 import com.teclemas.factura.dao.AdmiCaracteristicaDAO;
 import com.teclemas.factura.dao.InfoFacturaDAO;
@@ -166,6 +167,9 @@ public class FacturaController {
             if (!newValue.matches("\\d*")) {
                 txtCantidad.setText(newValue.replaceAll("[^\\d]", ""));
             }
+            if (newValue.length() > 3) {
+                txtCantidad.setText(oldValue);
+            }
         });
 
         // Para txtPrecioUnitario (números decimales)
@@ -180,7 +184,26 @@ public class FacturaController {
             if (!newValue.matches("\\d*")) {
                 txtTelefonoCliente.setText(newValue.replaceAll("[^\\d]", ""));
             }
+            if (newValue.length() > 10) {
+                txtTelefonoCliente.setText(oldValue);
+                txtTelefonoCliente.setStyle("");
+            } else if (newValue.length() < 10) {
+                txtTelefonoCliente.setStyle(
+                        "-fx-border-color: red; -fx-border-width: 2px; -fx-border-radius: 5px; -fx-background-color: cyan;");
+            }
+            if (newValue.length() == 0) {
+                txtTelefonoCliente.setStyle("");
+            }
         });
+
+        txtCorreoCliente.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.isEmpty() && !Pattern.matches("^[\\w-\\.]+@[\\w-]+\\.[a-zA-Z]{2,}$", newValue)) {
+                txtCorreoCliente.setStyle("-fx-border-color: red;");
+            } else {
+                txtCorreoCliente.setStyle("");
+            }
+        });
+
     }
 
     @FXML

@@ -14,9 +14,9 @@
       <Label layoutX="66.0" layoutY="8.0" text="Nombre del Producto" />
       <TextField fx:id="txtNombreProducto" layoutX="237.0" layoutY="4.0" />
       <Label layoutX="66.0" layoutY="50.0" text="Cantidad" />
-      <TextField fx:id="txtCantidad" layoutX="237.0" layoutY="46.0" onlyNumeric="true" />
+      <TextField fx:id="txtCantidad" layoutX="237.0" layoutY="46.0"  />
       <Label layoutX="66.0" layoutY="99.0" text="Precio Unitario" />
-      <TextField fx:id="txtPrecioUnitario" layoutX="237.0" layoutY="95.0" onlyNumeric="true" />
+      <TextField fx:id="txtPrecioUnitario" layoutX="237.0" layoutY="95.0"   />
       <Button fx:id="btnAgregar" layoutX="462.0" layoutY="13.0" mnemonicParsing="false" onAction="#agregar" text="Agregar" />
       <Button fx:id="btnLimpiar" layoutX="463.0" layoutY="59.0" mnemonicParsing="false" onAction="#limpiar" text="Limpiar" />
       <TableView fx:id="tblProducto" layoutX="44.0" layoutY="143.0" prefHeight="219.0" prefWidth="531.0">
