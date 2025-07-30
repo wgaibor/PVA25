@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.Pane?>
+
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="419.0" prefWidth="629.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.renta.xzrentcar.controller.RentaController">
+   <children>
+      <Label layoutX="35.0" layoutY="21.0" text="DNI" />
+      <Label layoutX="34.0" layoutY="56.0" text="Nombre" />
+      <Label layoutX="35.0" layoutY="96.0" text="Modelo" />
+      <Label layoutX="35.0" layoutY="136.0" text="Marca" />
+      <Label layoutX="35.0" layoutY="169.0" text="Fe. Nacimiento" />
+      <TextField fx:id="txtDNI" layoutX="126.0" layoutY="17.0" />
+      <TextField fx:id="txtNombre" layoutX="126.0" layoutY="52.0" />
+      <ComboBox fx:id="cmbModelo" layoutX="126.0" layoutY="92.0" prefWidth="150.0" />
+      <TextField fx:id="txtMarca" layoutX="127.0" layoutY="132.0" />
+      <DatePicker fx:id="dpFeNacimiento" layoutX="127.0" layoutY="165.0" />
+      <CheckBox fx:id="cbxTieneTC" layoutX="356.0" layoutY="169.0" mnemonicParsing="false" text="Tiene t/c?" />
+      <Button fx:id="btnGuardar" layoutX="367.0" layoutY="25.0" mnemonicParsing="false" onAction="#guardar" text="Guardar" />
+      <Button fx:id="btnLimpiar" layoutX="367.0" layoutY="92.0" mnemonicParsing="false" onAction="#limpiar" text="Limpiar" />
+      <TableView fx:id="tblRenta" layoutX="34.0" layoutY="190.0" prefHeight="200.0" prefWidth="565.0">
+        <columns>
+          <TableColumn fx:id="tcDNI" prefWidth="75.0" text="DNI" />
+          <TableColumn fx:id="tcNombre" prefWidth="148.00003051757812" text="Nombre" />
+            <TableColumn fx:id="tcModelo" prefWidth="84.6666259765625" text="Modelo" />
+            <TableColumn fx:id="tcMarca" prefWidth="120.66668701171875" text="Marca" />
+            <TableColumn fx:id="tcFeNacimiento" prefWidth="88.6666259765625" text="Fe Nacimiento" />
+            <TableColumn fx:id="tcTC" prefWidth="47.33331298828125" text="T/C" />
+        </columns>
+      </TableView>
+   </children>
+</Pane>
