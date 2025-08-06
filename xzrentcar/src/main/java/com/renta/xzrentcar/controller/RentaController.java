@@ -1,12 +1,16 @@
 package com.renta.xzrentcar.controller;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Observable;
 
+import com.renta.xzrentcar.dao.RentaDAO;
 import com.renta.xzrentcar.entity.ModeloVehiculoEntity;
 import com.renta.xzrentcar.entity.RentaEntity;
+import com.renta.xzrentcar.model.InfoRentaModel;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -107,6 +111,20 @@ public class RentaController {
             }
         });
 
+        // Recuperar registros de base de datos
+        RentaDAO objRenta = new RentaDAO();
+        List<InfoRentaModel> lstRentaModel = objRenta.obtenerItems();
+        for (InfoRentaModel infoRentaModel : lstRentaModel) {
+            RentaEntity objRentaEntity = new RentaEntity();
+            objRentaEntity.setDni(infoRentaModel.getDni());
+            objRentaEntity.setModelo(infoRentaModel.getModelo());
+            objRentaEntity.setMarca(infoRentaModel.getMarca());
+            objRentaEntity.setNombre(infoRentaModel.getNombres());
+            objRentaEntity.setFechaNacimiento(java.sql.Date.valueOf(infoRentaModel.getFeNacimiento()));
+            objRentaEntity.setTieneTarjetaCredito(infoRentaModel.getTieneTc());
+            lstRenta.add(objRentaEntity);
+        }
+
     }
 
     private void llenarComboModelo() {
@@ -160,6 +178,23 @@ public class RentaController {
         rentas.setTieneTarjetaCredito(tieneTarjetaCredito);
 
         lstRenta.add(rentas);
+
+        // LLenar el objeto model antes de guardar en la base de datos
+        InfoRentaModel infoRenta = new InfoRentaModel();
+        infoRenta.setDni(dni);
+        infoRenta.setNombres(nombre);
+        infoRenta.setModelo(modelo);
+        infoRenta.setMarca(marca);
+        infoRenta.setFeNacimiento(LocalDate.ofInstant(feNacimiento.toInstant(), ZoneId.systemDefault()));
+        infoRenta.setTieneTc(tieneTarjetaCredito);
+        infoRenta.setFeCreacion(LocalDate.now());
+        infoRenta.setUsrCreacion("wgaibor");
+        infoRenta.setEstado("Activo");
+
+        // Invocar al dao para guardar la data
+        RentaDAO rentaDAO = new RentaDAO();
+        rentaDAO.insertar(infoRenta);
+        alertarUsuario(AlertType.CONFIRMATION, "Registros", "Se almacena correctamente el registro");
         limpiarCampos();
     }
 

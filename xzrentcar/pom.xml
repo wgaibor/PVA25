@@ -20,6 +20,20 @@
             <artifactId>javafx-fxml</artifactId>
             <version>13</version>
         </dependency>
+
+        <!-- JPA and EclipseLink dependencies -->
+        <dependency>
+            <groupId>org.eclipse.persistence</groupId>
+            <artifactId>eclipselink</artifactId>
+            <version>4.0.2</version>
+        </dependency>
+        <!-- mysql conector -->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>8.0.33</version>
+        </dependency>
+
     </dependencies>
     <build>
         <plugins>
